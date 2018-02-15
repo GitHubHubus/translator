@@ -1,12 +1,8 @@
 #!/usr/bin/python
 
+import os
 import sys
 import requests
-
-url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&dt=bd&dj=1&tl=ru&text='
-input = sys.argv 
-
-print(input)
 
 def translate(url):
  sys.stdout.write('> ')
@@ -24,14 +20,38 @@ def translate(url):
  return True
 
 def getHelp():
- print('-i - interactive mode')
- print('-h - instruction')
+ print('-i - Interactive mode')
+ print('-h - Instruction')
+ print('-l - Inverse language')
 
-if len(input) < 2:
- translate(url)
-elif input[1] == '-i':
- while True:
-  if translate(url) == False:
-   break
-elif input[1] == '-h':
- getHelp()
+def inverseLanguage():
+ os.environ['TRANS_OL'], os.environ['TRANS_IL'] = os.getenv('TRANS_IL'), os.getenv('TRANS_OL')
+ print('Input language: ' + os.getenv('TRANS_IL'))
+ print('Output language: ' + os.getenv('TRANS_OL'))
+
+def getUrl():
+ return 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + os.getenv('TRANS_IL') + '&dt=t&dt=bd&dj=1&tl=' + os.getenv('TRANS_OL') + '&ie=UTF-8&oe=UTF-8&text='
+
+
+def init():
+ if not os.getenv('TRANS_IL') or not os.getenv('TRANS_OL'):
+  os.environ['TRANS_IL'] = 'en'
+  os.environ['TRANS_OL'] = 'ru'
+
+def main():
+ init()
+ input = sys.argv
+
+ if len(input) < 2:
+  translate(getUrl())
+ elif input[1] == '-i':
+  url = getUrl()
+  while True:
+   if translate(url) == False:
+    break
+ elif input[1] == '-h':
+  getHelp()
+ elif input[1] == '-l':
+  inverseLanguage()
+
+main()
