@@ -20,38 +20,24 @@ def translate(url):
  return True
 
 def getHelp():
- print('-i - Interactive mode')
- print('-h - Instruction')
- print('-l - Inverse language')
+ print('-i - Interactive mode. Exit from this mode by enter in command line "\exit"')
+ print('-r - Revert input/output language (without flag en -> ru and with ru -> en)')
 
-def inverseLanguage():
- os.environ['TRANS_OL'], os.environ['TRANS_IL'] = os.getenv('TRANS_IL'), os.getenv('TRANS_OL')
- print('Input language: ' + os.getenv('TRANS_IL'))
- print('Output language: ' + os.getenv('TRANS_OL'))
-
-def getUrl():
- return 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + os.getenv('TRANS_IL') + '&dt=t&dt=bd&dj=1&tl=' + os.getenv('TRANS_OL') + '&ie=UTF-8&oe=UTF-8&text='
-
-
-def init():
- if not os.getenv('TRANS_IL') or not os.getenv('TRANS_OL'):
-  os.environ['TRANS_IL'] = 'en'
-  os.environ['TRANS_OL'] = 'ru'
+def getUrl(lg):
+ return 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&dt=bd&dj=1&tl=' + lg + '&ie=UTF-8&oe=UTF-8&text='
 
 def main():
- init()
  input = sys.argv
+ language = 'en' if '-r' in input else 'ru'
 
- if len(input) < 2:
-  translate(getUrl())
- elif input[1] == '-i':
-  url = getUrl()
+ if '-i' in input:
+  url = getUrl(language)
   while True:
-   if translate(url) == False:
+   if not translate(url):
     break
- elif input[1] == '-h':
+ elif '-h' in input or '--help' in input:
   getHelp()
- elif input[1] == '-l':
-  inverseLanguage()
+ else:
+  translate(getUrl(language))
 
 main()
