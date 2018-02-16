@@ -1,4 +1,5 @@
 # translator
+The shell translator which uses google translate service to translate text
 
 For using it you need Python 2.7
 
