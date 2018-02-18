@@ -4,6 +4,21 @@ import os
 import sys
 import requests
 
+def showSingleWordTranslate(data):
+ value = data[0]['terms'] if 'terms' in data[0] else data[0]['trans']
+
+ if type(value) is str:
+  sys.stdout.write('< ' + value)
+ else:
+  for i in range(0, len(value)):
+   sys.stdout.write(' ' + str(i + 1) + ') ' + value[i] + '\n')
+
+def showTextTranslate(data):
+ sys.stdout.write('< ')
+
+ for i in range(0, len(data)):
+  sys.stdout.write(data[i]['trans'])
+
 def translate(url):
  sys.stdout.write('> ')
  data = raw_input()
@@ -14,7 +29,10 @@ def translate(url):
  output = requests.get(url + data).json()
 
  if 'sentences' in output.keys() and len(output['sentences']) > 0 and  'trans' in output['sentences'][0].keys():
-  sys.stdout.write('< ' + output['sentences'][0]['trans'])
+  if ' ' not in data:
+   showSingleWordTranslate(output['dict'] if 'dict' in output else output['sentences'])
+  else:
+   showTextTranslate(output['sentences'])
 
  sys.stdout.write('\n')
  return True
