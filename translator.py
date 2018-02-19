@@ -4,19 +4,22 @@ import os
 import sys
 import requests
 
+def getFormat(string, color = '\033[92m'):
+ return color + string + '\033[0m'
+
 def showSingleWordTranslate(data):
  value = data['terms'] if 'terms' in data else data['trans']
  if type(value) is unicode:
-  sys.stdout.write('< ' + value)
+  sys.stdout.write(getFormat('< ' + value))
  else:
   for i in range(0, len(value)):
-   sys.stdout.write(' ' + str(i + 1) + ') ' + value[i] + '\n')
+   sys.stdout.write(getFormat(' ' + str(i + 1) + ') ' + value[i] + '\n', '\033[94m'))
 
 def showTextTranslate(data):
- sys.stdout.write('< ')
+ sys.stdout.write(getFormat('< '))
 
  for i in range(0, len(data)):
-  sys.stdout.write(data[i]['trans'])
+  sys.stdout.write(getFormat(data[i]['trans']))
 
 def translate(url):
  sys.stdout.write('> ')
@@ -46,15 +49,15 @@ def getUrl(lg):
 def main():
  input = sys.argv
  language = 'en' if '-r' in input else 'ru'
+ url = getUrl(language)
 
  if '-i' in input:
-  url = getUrl(language)
   while True:
    if not translate(url):
     break
  elif '-h' in input or '--help' in input:
   getHelp()
  else:
-  translate(getUrl(language))
+  translate(url)
 
 main()
