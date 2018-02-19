@@ -3,12 +3,14 @@
 import os
 import sys
 import requests
+import readline
 
 def getFormat(string, color = '\033[92m'):
  return color + string + '\033[0m'
 
 def showSingleWordTranslate(data):
  value = data['terms'] if 'terms' in data else data['trans']
+
  if type(value) is unicode:
   sys.stdout.write(getFormat('< ' + value))
  else:
@@ -22,8 +24,7 @@ def showTextTranslate(data):
   sys.stdout.write(getFormat(data[i]['trans']))
 
 def translate(url):
- sys.stdout.write('> ')
- data = raw_input()
+ data = raw_input('> ')
 
  if data == '\exit':
   return False;
