@@ -5,9 +5,8 @@ import sys
 import requests
 
 def showSingleWordTranslate(data):
- value = data[0]['terms'] if 'terms' in data[0] else data[0]['trans']
-
- if type(value) is str:
+ value = data['terms'] if 'terms' in data else data['trans']
+ if type(value) is unicode:
   sys.stdout.write('< ' + value)
  else:
   for i in range(0, len(value)):
@@ -30,7 +29,7 @@ def translate(url):
 
  if 'sentences' in output.keys() and len(output['sentences']) > 0 and  'trans' in output['sentences'][0].keys():
   if ' ' not in data:
-   showSingleWordTranslate(output['dict'] if 'dict' in output else output['sentences'])
+   showSingleWordTranslate(output['dict'][0] if 'dict' in output else output['sentences'][0])
   else:
    showTextTranslate(output['sentences'])
 
